@@ -12,6 +12,7 @@ module BetaBuilder
       @configuration = Configuration.new(
         :configuration => "Adhoc",
         :build_dir => "build",
+        :configuration_build_dir => nil,
         :auto_archive => false,
         :archive_path  => File.expand_path("~/Library/Developer/Xcode/Archives"),
         :xcodebuild_path => "xcodebuild",
@@ -51,6 +52,8 @@ module BetaBuilder
         end
 
         args << " -arch \"#{arch}\"" unless arch.nil?
+
+        args << " CONFIGURATION_BUILD_DIR=#{configuration_build_dir}" unless configuration_build_dir.nil?
 
         args
       end
