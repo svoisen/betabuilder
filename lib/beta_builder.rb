@@ -97,12 +97,16 @@ module BetaBuilder
         "#{built_app_path}.dSYM"
       end
       
-      def dist_path
+      def package_path
         if !project_file_path.nil?
-          File.join(File.dirname(project_file_path), "pkg/dist")
+          File.join(File.dirname(project_file_path), "pkg")
         else
-          File.join("pkg/dist")
+          File.join("pkg")
         end
+      end
+
+      def dist_path
+        File.join(package_path, "dist")
       end
       
       def ipa_path
@@ -140,14 +144,14 @@ module BetaBuilder
             Rake::Task["#{@namespace}:archive"].invoke
           end
                     
-          FileUtils.rm_rf('pkg') && FileUtils.mkdir_p('pkg')
-          FileUtils.mkdir_p("pkg/Payload")
-          FileUtils.mv(@configuration.built_app_path, "pkg/Payload/#{@configuration.app_file_name}")
-          Dir.chdir("pkg") do
+          FileUtils.rm_rf(@configuration.package_path) && FileUtils.mkdir_p(@configuration.package_path)
+          FileUtils.mkdir_p(File.join(@configuration.package_path, "Payload"))
+          FileUtils.mv(@configuration.built_app_path, File.join(@configuration.package_path, "Payload/#{@configuration.app_file_name}"))
+          Dir.chdir(@configuration.package_path) do
             system("zip -r '#{@configuration.ipa_name}' Payload")
           end
-          FileUtils.mkdir('pkg/dist')
-          FileUtils.mv("pkg/#{@configuration.ipa_name}", "pkg/dist")
+          FileUtils.mkdir(@configuration.dist_path)
+          FileUtils.mv(File.join(@configuration.package_path, @configuration.ipa_name), @configuration.dist_path)
         end
         
         if @configuration.deployment_strategy
