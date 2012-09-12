@@ -41,6 +41,7 @@ module BetaBuilder
         return release_notes.call if release_notes.is_a? Proc
         release_notes
       end
+
       def build_arguments
         args = ""
         if workspace_path
@@ -97,7 +98,11 @@ module BetaBuilder
       end
       
       def dist_path
-        File.join("pkg/dist")
+        if !project_file_path.nil?
+          File.join(File.dirname(project_file_path), "pkg/dist")
+        else
+          File.join("pkg/dist")
+        end
       end
       
       def ipa_path
