@@ -13,6 +13,7 @@ module BetaBuilder
         :configuration => "Adhoc",
         :build_dir => "build",
         :configuration_build_dir => nil,
+        :header_search_paths => nil,
         :auto_archive => false,
         :archive_path  => File.expand_path("~/Library/Developer/Xcode/Archives"),
         :xcodebuild_path => "xcodebuild",
@@ -55,6 +56,7 @@ module BetaBuilder
         args << " -arch \"#{arch}\"" unless arch.nil?
 
         args << " CONFIGURATION_BUILD_DIR=#{configuration_build_dir}" unless configuration_build_dir.nil?
+        args << " HEADER_SEARCH_PATHS=#{header_search_paths}" unless header_search_paths.nil?
 
         args
       end
